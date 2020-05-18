@@ -31,5 +31,5 @@ image = Image.open(image_stream)
 opencv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 ```
 
-The rest of the code is pretty much identical in the link.
+The rest of the code is pretty much identical as in the link.
 
