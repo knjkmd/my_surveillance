@@ -10,7 +10,7 @@ while True:
     
     while not connected:
         try:
-            client_socket.connect(('192.168.178.22', 8000))
+            client_socket.connect(('192.168.178.14', 8866))
             connected = True
             print("Connected to the server")
         except Exception as e:
