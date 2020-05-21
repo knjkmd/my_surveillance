@@ -21,7 +21,7 @@ if __name__ == '__main__':
     # Start a socket listening fo   r connections on 0.0.0.0:8000 (0.0.0.0 means
     # all interfaces)
     server_socket = socket.socket()
-    server_socket.bind(('0.0.0.0', 8000))
+    server_socket.bind(('0.0.0.0', 8866))
     server_socket.listen(0)
 
     # Accept a single connection and make a file-like object out of it
@@ -47,30 +47,30 @@ if __name__ == '__main__':
             image = Image.open(image_stream)
             #print('Image is %dx%d' % image.size)
             opencv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-            cv2.imshow('image', opencv_image)
+            #cv2.imshow('image', opencv_image)
 
             current_time = datetime.datetime.now()
             if is_hour_changed(previous_time, current_time):
                 save_image(current_time, opencv_image)
 
-            if writer:
-                writer.write(opencvImage)
-            key = cv2.waitKey(1)
-            if key & 0xFF == ord('q'):
-                break
-            elif key & 0xFF == ord('r'):
-                print('r is pressed')
-                if writer:
-                    # write frame
-                    end_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-                    writer.release()
-                    print("video file: {} was saved.".format(video_filename))
-                    
-                else:
-                    start_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-                    video_filename = "{}.avi".format(start_time)
-                    writer = cv2.VideoWriter(video_filename, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 1,  (640, 480))
-
+#            if writer:
+#                writer.write(opencvImage)
+#            key = cv2.waitKey(1)
+#            if key & 0xFF == ord('q'):
+#                break
+#            elif key & 0xFF == ord('r'):
+#                print('r is pressed')
+#                if writer:
+#                    # write frame
+#                    end_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+#                    writer.release()
+#                    print("video file: {} was saved.".format(video_filename))
+#                    
+#                else:
+#                    start_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+#                    video_filename = "{}.avi".format(start_time)
+#                    writer = cv2.VideoWriter(video_filename, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 1,  (640, 480))
+#
             previous_time = current_time
 
 
