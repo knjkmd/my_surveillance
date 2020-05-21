@@ -4,11 +4,16 @@ import struct
 import time
 import picamera
 
-# Connect a client socket to my_server:8000 (change my_server to the
-# hostname of your server)
 client_socket = socket.socket()
-client_socket.connect(('192.168.178.22', 8000))
-
+connected = False
+while not connected:
+    try:
+        client_socket.connect(('192.168.178.22', 8000))
+        connected = True
+    except Exception as e:
+        time.sleep(0.1)
+        pass
+    
 # Make a file-like object out of the connection
 connection = client_socket.makefile('wb')
 try:
@@ -40,6 +45,10 @@ try:
         stream.truncate()
     # Write a length of zero to the stream to signal we're done
     connection.write(struct.pack('<L', 0))
-finally:
+
+except (BrokenPipeError, IOError):
+    print("Detected remote disconnect")
+except:
     connection.close()
+finally:
     client_socket.close()
