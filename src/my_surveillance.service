@@ -4,9 +4,9 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/home/pi/bot/my_surveillance/src/client.py
+ExecStart=/home/pi/my_surveillance/src/client.py
 User=pi
-WorkingDirectory=/home/pi/bot/my_surveillance/src/
+WorkingDirectory=/home/pi/my_surveillance/src/
 Restart=on-failure
 
 [Install]
