@@ -1,0 +1,13 @@
+[Unit]
+Description=My Surveillance service
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/home/pi/bot/my_surveillance/src/client.py
+User=pi
+WorkingDirectory=/home/pi/bot/my_surveillance/src/
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
