@@ -13,6 +13,10 @@ def is_hour_changed(previous_time, current_time):
     return previous_time.hour != current_time.hour
 
 
+def is_next_10_minutes(previous_time, current_time):
+    return previous_time.minute // 10 != current_time.minute // 10
+
+
 def save_image(time, frame):
     imagefile_name = './image/' + time.strftime('%Y%m%d%H%M%S') + '.png'
     cv2.imwrite(imagefile_name, frame)
@@ -61,35 +65,14 @@ if __name__ == '__main__':
                 image = Image.open(image_stream)
                 #print('Image is %dx%d' % image.size)
                 opencv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-                detections = ssd_model.detect(opencv_image)
-                opencv_image = ssd_model.annotate(detections, opencv_image)
-  
+
                 current_time = datetime.datetime.now()
                 if is_hour_changed(previous_time, current_time):
                     save_image(current_time, opencv_image)
 
-                # Only show if enalbed
-                if show_image:
-                    cv2.imshow('image', opencv_image)
-                    if writer:
-                        writer.write(opencvImage)
-
-                    key = cv2.waitKey(1)
-                    if key & 0xFF == ord('q'):
-                        break
-                    elif key & 0xFF == ord('r'):
-                        print('r is pressed')
-                        if writer:
-                            # write frame
-                            end_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-                            writer.release()
-                            print("video file: {} was saved.".format(video_filename))
-                            
-                        else:
-                            start_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-                            video_filename = "{}.avi".format(start_time)
-                            writer = cv2.VideoWriter(video_filename, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 1,  (640, 480))
-
+                detections = ssd_model.detect(opencv_image)
+                opencv_image = ssd_model.annotate(detections, opencv_image)
+  
                 previous_time = current_time
         except:
             pass
