@@ -1,2 +1,4 @@
 *.swp
 *.avi
+.idea/
+*.pyc
