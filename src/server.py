@@ -19,6 +19,10 @@ def is_hour_changed(previous_time, current_time):
     return previous_time.hour != current_time.hour
 
 
+def is_day_changed(previous_time, current_time):
+    return previous_time.day != current_time.day
+
+
 def is_next_10_minutes(previous_time, current_time):
     return previous_time.minute // 10 != current_time.minute // 10
 
@@ -99,6 +103,9 @@ if __name__ == '__main__':
                 current_time = datetime.datetime.now()
                 if is_hour_changed(previous_time, current_time):
                     save_image(current_time, opencv_image)
+                elif is_day_changed(previous_time, current_time):
+                    date = previous_time.strftime("%Y%m%d")
+                    create_gif(date)
 
                 detections = ssd_model.detect(opencv_image)
                 opencv_image = ssd_model.annotate(detections, opencv_image)

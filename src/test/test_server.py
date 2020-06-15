@@ -5,7 +5,7 @@ import os
 import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
-from server import is_hour_changed, is_next_10_minutes, create_gif
+from server import is_hour_changed, is_next_10_minutes, create_gif, is_day_changed
 
 class TestServer(unittest.TestCase):
 
@@ -14,7 +14,7 @@ class TestServer(unittest.TestCase):
         current_time = datetime.datetime(2020, 2, 1, 1, 0, 0, 0)
         self.assertTrue(is_hour_changed(previous_time, current_time))
 
-    def test__is_hour_changed__same_hour__return_true(self):
+    def test__is_hour_changed__same_hour__return_false(self):
         previous_time = datetime.datetime(2020, 2, 1, 0, 0, 0, 0)
         current_time = datetime.datetime(2020, 2, 1, 0, 0, 0, 0)
         self.assertFalse(is_hour_changed(previous_time, current_time))
@@ -24,7 +24,7 @@ class TestServer(unittest.TestCase):
         current_time = previous_time + datetime.timedelta(minutes=12)
         self.assertTrue(is_next_10_minutes(previous_time, current_time))
 
-    def test__is_next_10_minutes__after_5_minutes__return_true(self):
+    def test__is_next_10_minutes__after_5_minutes__return_false(self):
         previous_time = datetime.datetime(2020, 2, 1, 0, 0, 0, 0)
         current_time = previous_time + datetime.timedelta(minutes=5)
         self.assertFalse(is_next_10_minutes(previous_time, current_time))
@@ -33,6 +33,16 @@ class TestServer(unittest.TestCase):
         date = '20200601'
         result = create_gif(date)
         self.assertTrue(result)
+
+    def test__is_day_changed__same_day__return_false(self):
+        previous_time = datetime.datetime(2020, 2, 1, 0, 0, 0, 0)
+        current_time = datetime.datetime(2020, 2, 1, 0, 0, 0, 0)
+        self.assertFalse(is_day_changed(previous_time, current_time))
+
+    def test__is_day_changed__next_day__return_true(self):
+        previous_time = datetime.datetime(2020, 2, 1, 0, 0, 0, 0)
+        current_time = datetime.datetime(2020, 2, 2, 0, 0, 0, 0)
+        self.assertTrue(is_day_changed(previous_time, current_time))
 
 
 if __name__=="__main__":
