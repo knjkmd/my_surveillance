@@ -6,8 +6,14 @@ import cv2
 import numpy as np
 import datetime
 import time
+import subprocess
 
 import detection_models
+import os
+import glob
+
+
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 def is_hour_changed(previous_time, current_time):
     return previous_time.hour != current_time.hour
@@ -21,6 +27,30 @@ def save_image(time, frame):
     imagefile_name = './image/' + time.strftime('%Y%m%d%H%M%S') + '.png'
     cv2.imwrite(imagefile_name, frame)
     print("Saved: {}".format(imagefile_name))
+
+
+def create_gif(date):
+    # Get file list
+    image_dir = THIS_DIR + '/image'
+    gif_filename = image_dir + '/' + date + ".gif"
+    if os.path.exists(gif_filename):
+        print("Already exists: {}".format(gif_filename))
+        return True
+
+    files = glob.glob(image_dir + '/' + date + '*.png')
+    command = ["convert", "-delay", "50", "-loop", "0"]
+    command.extend(sorted(files))
+    command.append(gif_filename)
+    return_code = subprocess.run(command).returncode
+    if return_code == 0:
+        print("Saved: {}".format(gif_filename))
+        for f in files:
+            os.remove(f)
+        print("Removed original png files for : {}".format(gif_filename))
+        return True
+    else:
+        print("Failed to save: {}".format(gif_filename))
+        return False
 
 
 if __name__ == '__main__':
