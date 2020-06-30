@@ -2,6 +2,7 @@ import cv2
 import datetime
 import glob
 import io
+import logging
 import os
 import numpy as np
 import socket
@@ -13,8 +14,29 @@ from PIL import Image
 
 import detection_models
 
+# logsetting
+logger = logging.getLogger(__name__)
+# create logger
+logger.setLevel(logging.DEBUG)
 
+# create console handler and set level to debug
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
 
+# create file handler
+fh = logging.FileHandler('server.log', mode='a', encoding=None, delay=False)
+fh.setLevel(logging.DEBUG)
+
+# create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# add formatter to handlers
+ch.setFormatter(formatter)
+fh.setFormatter(formatter)
+
+# add handlers to logger
+logger.addHandler(ch)
+logger.addHandler(fh)
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -33,7 +55,7 @@ def is_next_10_minutes(previous_time, current_time):
 def save_image(time, frame):
     imagefile_name = './image/' + time.strftime('%Y%m%d%H%M%S') + '.png'
     cv2.imwrite(imagefile_name, frame)
-    print("Saved: {}".format(imagefile_name))
+    logger.info("Saved: {}".format(imagefile_name))
 
 
 def create_gif(date):
@@ -41,7 +63,7 @@ def create_gif(date):
     image_dir = THIS_DIR + '/image'
     gif_filename = image_dir + '/' + date + ".gif"
     if os.path.exists(gif_filename):
-        print("Already exists: {}".format(gif_filename))
+        logger.info("Already exists: {}".format(gif_filename))
         return True
 
     files = glob.glob(image_dir + '/' + date + '*.png')
@@ -50,13 +72,13 @@ def create_gif(date):
     command.append(gif_filename)
     return_code = subprocess.run(command).returncode
     if return_code == 0:
-        print("Saved: {}".format(gif_filename))
+        logger.info("Saved: {}".format(gif_filename))
         for f in files:
             os.remove(f)
-        print("Removed original png files for : {}".format(gif_filename))
+        logger.info("Removed original png files for : {}".format(gif_filename))
         return True
     else:
-        print("Failed to save: {}".format(gif_filename))
+        logger.info("Failed to save: {}".format(gif_filename))
         return False
 
 
@@ -71,12 +93,13 @@ if __name__ == '__main__':
 
         server_socket.bind(('0.0.0.0', 8866))
         server_socket.listen(0)
-        connected = False    
+        connected = False
+        logger.info("Created a socke and wait for a client...")    
         while not connected:
             try:
                 connection = server_socket.accept()[0].makefile('rb')
                 connected = True
-                print("Connected to a client")
+                logger.info("Connected to a client")
             except Exception as e:
                 time.sleep(0.1)
                 pass

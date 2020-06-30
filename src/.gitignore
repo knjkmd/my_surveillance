@@ -2,3 +2,5 @@
 *.avi
 .idea/
 *.pyc
+*.log
+tmp/
