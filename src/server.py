@@ -1,16 +1,19 @@
+import cv2
+import datetime
+import glob
 import io
+import os
+import numpy as np
 import socket
 import struct
-from PIL import Image
-import cv2
-import numpy as np
-import datetime
-import time
 import subprocess
+import time
+
+from PIL import Image
 
 import detection_models
-import os
-import glob
+
+
 
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
