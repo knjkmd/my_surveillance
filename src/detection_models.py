@@ -1,10 +1,18 @@
 # Test SSD and YOLO models for object detection
 
 # import the necessary packages
-import numpy as np
 import cv2
-import time
+import logging
+import numpy as np
 import os
+import time
+
+import logging.config
+
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger(__name__)
+logger.info('Module is initialized')
+logger.debug('Module is initialized')
 
 class SSDModel():
     def __init__(self):
@@ -22,12 +30,12 @@ class SSDModel():
 
     def detect(self, image):
         blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 0.007843, (300, 300), 127.5)
-        print("[INFO] computing object detections...")
+        logger.debug("Computing object detections...")
         self.net.setInput(blob)
         start_time = time.time()
         detections = self.net.forward()
         end_time = time.time()
-        print("[INFO] computing took {:.2f} seconds".format(end_time - start_time))
+        logger.debug("Computing took {:.2f} seconds".format(end_time - start_time))
 
         return detections
 
@@ -50,7 +58,7 @@ class SSDModel():
 
                 # display the prediction
                 label = "{}: {:.2f}%".format(self.CLASSES[idx], confidence * 100)
-                print("[INFO] {}".format(label))
+                logger.info("Found {}".format(label))
                 cv2.rectangle(image, (startX, startY), (endX, endY),
                     self.COLORS[idx], 2)
                 y = startY - 15 if startY - 15 > 15 else startY + 15
@@ -79,7 +87,7 @@ class YOLOModel():
         configPath = os.path.sep.join([yolo_directory, "yolov3.cfg"])
 
         # load our YOLO object detector trained on COCO dataset (80 classes)
-        print("[INFO] loading YOLO from disk...")
+        logger.info("Loading YOLO from disk...")
         self.net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 
         ln = self.net.getLayerNames()
@@ -90,11 +98,11 @@ class YOLOModel():
         blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416),
         swapRB=True, crop=False)
         self.net.setInput(blob)
-        print("[INFO] computing object detections...")
+        logger.debug("Computing object detections...")
         start_time = time.time()
         layerOutputs = self.net.forward(self.ln)
         end_time = time.time()
-        print("[INFO] computing took {:.2f} seconds".format(end_time - start_time))
+        logger.debug("Computing took {:.2f} seconds".format(end_time - start_time))
 
         return layerOutputs
 

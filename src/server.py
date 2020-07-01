@@ -3,6 +3,7 @@ import datetime
 import glob
 import io
 import logging
+import logging.config
 import os
 import numpy as np
 import socket
@@ -14,29 +15,12 @@ from PIL import Image
 
 import detection_models
 
+
 # logsetting
-logger = logging.getLogger(__name__)
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger('server')
 # create logger
 logger.setLevel(logging.DEBUG)
-
-# create console handler and set level to debug
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-
-# create file handler
-fh = logging.FileHandler('server.log', mode='a', encoding=None, delay=False)
-fh.setLevel(logging.DEBUG)
-
-# create formatter
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# add formatter to handlers
-ch.setFormatter(formatter)
-fh.setFormatter(formatter)
-
-# add handlers to logger
-logger.addHandler(ch)
-logger.addHandler(fh)
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
