@@ -113,7 +113,8 @@ if __name__ == '__main__':
                 current_time = datetime.datetime.now()
                 if is_hour_changed(previous_time, current_time):
                     save_image(current_time, opencv_image)
-                elif is_day_changed(previous_time, current_time):
+                    
+                if is_day_changed(previous_time, current_time):
                     date = previous_time.strftime("%Y%m%d")
                     create_gif(date)
 
