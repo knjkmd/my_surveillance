@@ -33,3 +33,5 @@ opencv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
 The rest of the code is pretty much identical as in the link.
 
+# Image sizes
+Average image size is 380 kb. Suppose I save images every hour, then number of images for a year is `24*365=8760` and required disk space for one year is `8760*380/1024/1024=3.17` Gb.
